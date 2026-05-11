@@ -14,6 +14,14 @@
 
 Backend infrastructure for **Vérité AI**, a tri-modal deepfake detection platform supporting **image**, **video**, and **audio** analysis with integrated **Explainable AI (XAI)** and **LLM-generated forensic explanations**.
 
+## Research & Thesis
+
+This project was developed as a Final Year Project at National University of Sciences and Technology under the title:
+
+**“Vérité AI: A Deepfake Detection Website with Explainable AI”**
+
+The project was awarded a **Gold Star** in recognition of its technical innovation and practical implementation in the field of AI-driven media forensics.
+
 ## Related Repositories
 
 - Frontend: [Vérité AI Frontend](https://github.com/hba777/X-DetectRT-Frontend)
@@ -21,7 +29,7 @@ Backend infrastructure for **Vérité AI**, a tri-modal deepfake detection platf
 
 ## Features
 
-* Tri-modal deepfake detection:
+* **Tri-modal** deepfake detection:
   * Image
   * Video
   * Audio
@@ -41,7 +49,6 @@ Backend infrastructure for **Vérité AI**, a tri-modal deepfake detection platf
 
 <img width="1494" height="511" alt="FYP - Thesis_page67_image" src="https://github.com/user-attachments/assets/59e01f95-bf2a-4243-8b0e-6dadaf0600a7" />
 
-
 ## Core Modules
 
 ### Authentication
@@ -54,7 +61,7 @@ Backend infrastructure for **Vérité AI**, a tri-modal deepfake detection platf
 
 #### Image Detection
 
-* CNN/ViT-based deepfake classifier
+* ViT-based deepfake classifier
 * Grad-CAM explainability
 * Synchronous inference
 
