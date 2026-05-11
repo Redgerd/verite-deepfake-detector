@@ -175,39 +175,3 @@ celery -A app.worker worker --loglevel=info
 ```bash
 docker-compose up --build
 ```
-
----
-
-## Project Structure
-
-```text
-backend/
-│
-├── app/
-│   ├── api/
-│   ├── core/
-│   ├── models/
-│   ├── services/
-│   ├── tasks/
-│   ├── utils/
-│   └── main.py
-│
-├── ml/
-│   ├── image/
-│   ├── video/
-│   ├── audio/
-│   └── xai/
-│
-├── tests/
-├── docker-compose.yml
-├── requirements.txt
-└── README.md
-```
-
----
-
-## Research & Thesis
-
-This project was developed as a Final Year Project at National University of Sciences and Technology under the title:
-
-**“Vérité AI: A Deepfake Detection Website with Explainable AI”** 
