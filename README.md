@@ -24,7 +24,7 @@ The project was awarded a **Gold Star** in recognition of its technical innovati
 
 ## Related Repositories
 
-- Frontend: [Vérité AI Frontend](https://github.com/hba777/X-DetectRT-Frontend)
+- Frontend: [Vérité AI Frontend](https://github.com/hba777/Verite-AI-Frontend)
 - Hugging Face Collection: [Explainable Deepfake Detection](https://huggingface.co/collections/Redgerd/explainable-deepfake-detection)
 
 ## Features
