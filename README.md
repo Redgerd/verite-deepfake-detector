@@ -5,93 +5,202 @@
 [![TensorFlow](https://img.shields.io/badge/TensorFlow-%23FF6F00.svg?style=for-the-badge&logo=tensorflow&logoColor=white)](https://www.tensorflow.org/)
 [![OpenCV](https://img.shields.io/badge/OpenCV-%23004888.svg?style=for-the-badge&logo=opencv&logoColor=white)](https://opencv.org/)
 [![Docker](https://img.shields.io/badge/Docker-%230db7ed.svg?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
-[![Langchain](https://img.shields.io/badge/Langchain-%231A202C.svg?style=for-the-badge&logo=langchain&logoColor=white)](https://www.langchain.com/)
+[![MinIO](https://img.shields.io/badge/MinIO-C72E49?style=for-the-badge&logo=minio&logoColor=white)](https://min.io/)
+[![Firebase](https://img.shields.io/badge/Firebase-%23FFCA28.svg?style=for-the-badge&logo=firebase&logoColor=black)](https://firebase.google.com/)
+[![HuggingFace](https://img.shields.io/badge/HuggingFace-FFD21E?style=for-the-badge&logo=huggingface&logoColor=black)](https://huggingface.co/)
 
-## Real-Time Deepfake Detection and Explanation Using Lightweight ML and LLMs
-Deepfake content is an increasing threat to digital media authenticity. This project introduces a real-time, explainable deepfake detection pipeline that processes video in memory, minimizing latency while providing interpretable outputs. The system leverages frame reduction techniques, pretrained visual models (e.g., FakeShield), and vision-capable LLMs for generating human-understandable explanations — all without writing any media to disk.
 
-## Objectives
+## Vérité AI Backend
 
-- Perform **real-time deepfake detection** without persistent storage.
-- Apply **lightweight motion-based heuristics** (e.g., optical flow, scene detection) to reduce the number of frames analyzed.
-- Use pretrained models like **FakeShield** for forgery detection and localization.
-- Generate **coherent natural-language explanations** via fine-tuned vision LLMs.
-- Serve results instantly through a **FastAPI-based backend**, optionally containerized with Docker.
+Backend infrastructure for **Vérité AI**, a tri-modal deepfake detection platform supporting **image**, **video**, and **audio** analysis with integrated **Explainable AI (XAI)** and **LLM-generated forensic explanations**.
 
-## System Modules
+## Related Repositories
 
-### 1. Video Input & Streaming
+- Frontend: [Vérité AI Frontend](https://github.com/hba777/X-DetectRT-Frontend)
+- Hugging Face Collection: [Explainable Deepfake Detection](https://huggingface.co/collections/Redgerd/explainable-deepfake-detection)
 
-- Supports both **video file upload** and **live frame streaming** via WebSocket.
-- Entire pipeline runs **in-memory**, avoiding any disk I/O for performance.
+## Features
 
-### 2. Frame Selection Pipeline
+* Tri-modal deepfake detection:
+  * Image
+  * Video
+  * Audio
+* Explainable AI:
+  * Grad-CAM heatmaps
+  * Temporal audio attribution
+  * LLM-generated forensic narratives
+* Asynchronous processing using Celery + Redis
+* JWT/Firebase authentication
+* PDF forensic report generation
+* Detection history for registered users
+* Dockerized deployment
+* REST API built with FastAPI
 
-- **Optical Flow**: Tracks pixel-wise motion (e.g., Farneback or RAFT).
-- **Scene Change Detection**: Uses histogram delta or tools like PySceneDetect.
-- **Optional**: Background subtraction to eliminate static regions.
 
-> **Goal**: Reduce frame count by 90% while maintaining semantic fidelity.
+## System Architecture
 
-### 3. Deepfake Detection Engine
+<img width="1494" height="511" alt="FYP - Thesis_page67_image" src="https://github.com/user-attachments/assets/59e01f95-bf2a-4243-8b0e-6dadaf0600a7" />
 
-**Model**: [FakeShield v1-22b](https://huggingface.co/zhipeixu/fakeshield-v1-22b)  
-A multimodal vision-language framework for explainable deepfake detection and localization.
 
-**Input**:
-- Frame as a tensor (from OpenCV → NumPy → PyTorch)
-- Modules used: `DTE-FDM` and `MFLM`
+## Core Modules
 
-**Output** *(per frame)*:
-- `verdict`: real or fake
-- `confidence_score`: e.g., `0.87`
-- `forgery_mask`: binary/grayscale image mask (H, W) as `numpy.ndarray` or `torch.Tensor`
-- `attention_map` (optional): model attention visualization to highlight decision focus
+### Authentication
 
-These outputs are passed to the LLM for final explanation generation.
+* Firebase JWT verification
+* Protected API routes
+* Role-based access control
 
-### 4. Explanation Engine
+### Detection Pipelines
 
-**Model**: [saakshigupta/deepfake-explainer-new](https://huggingface.co/saakshigupta/deepfake-explainer-new)  
-A LLaVA-based adapter fine-tuned to generate deepfake analysis across multiple images.
+#### Image Detection
 
-**Inputs**:
-- Original frame
-- Forgery mask
-- Optional: Attention map or overlay
-- Prompt: _"Explain if this frame shows signs of tampering."_
+* CNN/ViT-based deepfake classifier
+* Grad-CAM explainability
+* Synchronous inference
 
-**Output**:
-- A **detailed natural language explanation**, highlighting potential manipulation and justifying the verdict.
+#### Video Detection
 
-**Example**:
-> “Regions around the mouth and cheek show boundary noise and abnormal motion artifacts, indicating synthetic manipulation.”
+* Frame extraction pipeline
+* Celery asynchronous task queue
+* Aggregated frame-level predictions
 
-### 5. Response API
+#### Audio Detection
 
-**Served via FastAPI** as JSON:
+* WavLM-based spoof detection
+* Temporal attribution visualization
+* Segment-level aggregation
+
+
+## Explainable AI (XAI)
+
+### Visual Explainability
+
+* Grad-CAM heatmaps
+* Facial manipulation localization
+* Attention overlays
+
+### Audio Explainability
+
+* Captum Integrated Gradients
+* Temporal importance attribution
+* Waveform visualization
+
+### LLM Explanations
+
+Natural-language forensic explanations generated using structured prompts and detection metadata.
+
+Example:
+
+> “Regions around the jawline and facial boundary exhibit blending inconsistencies and abnormal texture artifacts commonly associated with synthetic manipulation.”
+
+
+## API Response Example
+
 ```json
 {
-  "frame_index": 45,
   "verdict": "fake",
-  "confidence": 0.87,
-  "explanation": "Facial boundary irregularities suggest deepfake generation.",
-  "forgery_mask": "<base64-image>",
-  "attention_map": "<base64-image>"
+  "confidence": 0.94,
+  "modality": "video",
+  "explanation": "Facial blending artifacts detected near mouth region.",
+  "heatmap_url": "/media/heatmaps/sample.png",
+  "report_url": "/reports/report.pdf"
 }
 ```
 
-![image](https://github.com/user-attachments/assets/36bff216-3c11-45e6-acd4-bff72eff4020)
 
-## Tech Stack
+## Environment Variables
 
-| Layer              | Stack                         |
-|--------------------|-------------------------------|
-| API Backend        | FastAPI                       |
-| Frame Processing   | OpenCV, FFmpeg                |
-| Motion Detection   | Optical Flow, PySceneDetect   |
-| Deepfake Detection | FakeShield, PyTorch           |
-| LLM Explanation    | Hugging Face, LangChain       |
-| Deployment         | Docker (optional)             |
+```env
+DATABASE_URL=
+REDIS_URL=
+SECRET_KEY=
+FIREBASE_CREDENTIALS=
+OPENAI_API_KEY=
+MINIO_ENDPOINT=
+MINIO_ACCESS_KEY=
+MINIO_SECRET_KEY=
+```
 
+## Running Locally
 
+### Clone Repository
+
+```bash
+git clone https://github.com/your-username/verite-ai-backend.git
+cd verite-ai-backend
+```
+
+### Create Virtual Environment
+
+```bash
+python -m venv venv
+source venv/bin/activate
+```
+
+### Install Dependencies
+
+```bash
+pip install -r requirements.txt
+```
+
+### Start Redis
+
+```bash
+redis-server
+```
+
+### Start FastAPI
+
+```bash
+uvicorn app.main:app --reload
+```
+
+### Start Celery Worker
+
+```bash
+celery -A app.worker worker --loglevel=info
+```
+
+---
+
+## Docker Deployment
+
+```bash
+docker-compose up --build
+```
+
+---
+
+## Project Structure
+
+```text
+backend/
+│
+├── app/
+│   ├── api/
+│   ├── core/
+│   ├── models/
+│   ├── services/
+│   ├── tasks/
+│   ├── utils/
+│   └── main.py
+│
+├── ml/
+│   ├── image/
+│   ├── video/
+│   ├── audio/
+│   └── xai/
+│
+├── tests/
+├── docker-compose.yml
+├── requirements.txt
+└── README.md
+```
+
+---
+
+## Research & Thesis
+
+This project was developed as a Final Year Project at National University of Sciences and Technology under the title:
+
+**“Vérité AI: A Deepfake Detection Website with Explainable AI”** 
